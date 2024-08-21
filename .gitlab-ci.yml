@@ -1,0 +1,38 @@
+stages:
+  - build
+  - test
+  - deploy
+
+# Caching Gradle dependencies to speed up the build process
+cache:
+  key: "$CI_COMMIT_REF_SLUG"
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
+
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
+# Build stage
+build:
+  stage: build
+  script:
+    - ./gradlew clean build
+  artifacts:
+    paths:
+      - build/libs/*.jar
+
+# Test stage
+test:
+  stage: test
+  script:
+    - ./gradlew test
+
+# Deploy stage (example deployment to a server or service)
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploying to the server...uhu..."
+    # Add your deployment script here (e.g., SSH to a server, upload to a cloud service, etc.)
+  only:
+    - master  # Run deployment only on the main branch
